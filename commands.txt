@@ -1,0 +1,36 @@
+executar sérioes de comandos docker:
+docker build -t imagename endereco-dockerfile
+ex: docker build -t rentx .
+
+executar a imagem:
+docker run -p port:port image
+ex: docker run -p 3333:3333 rentx
+
+acessar bash da imagem (ex container linux):
+docker exec -it image_name-or-id path-do-bash
+ex: docker exec -it mysqldb /bin/bash
+obs: ctrl+d sai do modo bash
+
+iniciar execução do docker-compose.yml executar
+docker-compose up
+params: 
+  -d (não fecha o componente ao parar execução da api)
+  --force-recreate (força recriar as ações do compose)
+
+remove as imagens construidas localmente pelo compose
+docker-compose down -v --rmi local
+
+parar o serviço docker-compose em detached mode
+docker-compose stop
+
+desligar ações do compose
+docker-compose down
+
+ver logs de execução
+docker logs nome-container -f
+ex: docker logs rentx -f
+
+ver ip da vm docker
+docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' image-name
+ex: docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' rentx
+ou: docker exec image-name cat /etc/hosts
