@@ -1,4 +1,5 @@
 import { getRepository, Repository } from 'typeorm';
+
 import { Specification } from '../../entities/Specification';
 
 interface ICreateSpecificationDTO {
@@ -7,16 +8,16 @@ interface ICreateSpecificationDTO {
 }
 
 class SpecificationsRepository {
-  private repository: Repository<Specification>
+  private repository: Repository<Specification>;
 
   constructor() {
-    this.repository = getRepository(Specification)
+    this.repository = getRepository(Specification);
   }
 
   async create({ description, name }: ICreateSpecificationDTO): Promise<void> {
     const specification = this.repository.create({
       description,
-      name
+      name,
     });
 
     await this.repository.save(specification);
