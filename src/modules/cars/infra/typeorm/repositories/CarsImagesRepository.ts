@@ -10,6 +10,7 @@ class CarsImagesRepository implements ICarsImagesRepository {
   constructor() {
     this.repository = getRepository(CarImage);
   }
+
   async create(car_id: string, image_name: string): Promise<CarImage> {
     const carImage = this.repository.create({
       car_id,
@@ -19,6 +20,16 @@ class CarsImagesRepository implements ICarsImagesRepository {
     await this.repository.save(carImage);
 
     return carImage;
+  }
+
+  async findByCarId(car_id: string): Promise<CarImage[]> {
+    const carImages = this.repository.find({ car_id });
+
+    return carImages;
+  }
+
+  async deleteByImageName(image_name: string): Promise<void> {
+    this.repository.delete({ image_name })
   }
 }
 
