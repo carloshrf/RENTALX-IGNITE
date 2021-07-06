@@ -1,9 +1,10 @@
-import app from '@shared/infra/http/app'
-import request from 'supertest'
-import createConnection from '@shared/infra/typeorm';
+import { hash } from 'bcryptjs';
+import request from 'supertest';
 import { Connection } from 'typeorm';
 import { v4 as uuidV4 } from 'uuid';
-import { hash } from 'bcryptjs';
+
+import app from '@shared/infra/http/app';
+import createConnection from '@shared/infra/typeorm';
 
 let connection: Connection;
 
@@ -18,32 +19,35 @@ describe('List Category Controller', () => {
     await connection.query(`
       INSERT INTO users(id, name, email, password, "isAdmin", driver_license, created_at)
         VALUES('${id}', 'admin', 'admin@rentx.com.br', '${password}', true, 'XXXXXXX', 'now')
-    `)
+    `);
   });
 
   afterAll(async () => {
     await connection.dropDatabase();
-    await connection.close()
-  })
+    await connection.close();
+  });
 
-  it('should be able to lest all categories', async () => {
+  it('should be able to list all categories', async () => {
     const responseToken = await request(app).post('/sessions').send({
       email: 'admin@rentx.com.br',
-      password: 'admin'
+      password: 'admin',
     });
 
-    const { token } = responseToken.body;
+    const { refresh_token } = responseToken.body;
 
-    await request(app).post('/categories').send({
-      name: "super test category",
-      description: "a super test for category"
-    }).set({
-      Authorization: `Bearer ${token}`
-    });
+    await request(app)
+      .post('/categories')
+      .send({
+        name: 'super test category',
+        description: 'a super test for category',
+      })
+      .set({
+        Authorization: `Bearer ${refresh_token}`,
+      });
 
-    const response = await request(app).get('/categories')
+    const response = await request(app).get('/categories');
 
-    expect(response.status).toBe(200)
-    expect(response.body.length).toBe(1)
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBe(1);
   });
 });
