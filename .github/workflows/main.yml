@@ -21,7 +21,7 @@ jobs:
       - name: Install Dependencies
         run: yarn
       
-      - name: Buld
+      - name: Build
         run: yarn build
         
       - uses: appleboy/scp-action@master
